@@ -1,5 +1,6 @@
 import { WindIcon } from '@phosphor-icons/react';
 import { memo, useRef, useEffect, useState } from 'react';
+import { getWindIntensityClass } from '../../../domain/weather/wind';
 
 export interface WindDirectionProps {
   speedMs?: number;
@@ -17,6 +18,7 @@ export const WindDirection = memo(
 
     const [normalizedAngle, setNormalizedAngle] = useState<number>(0);
     const prevAngleRef = useRef<number>(0);
+    const windIntensityClass = getWindIntensityClass(speed);
 
     useEffect(() => {
       if (direction === undefined) return;
@@ -47,7 +49,7 @@ export const WindDirection = memo(
         <div className="flex justify-center">
           <div
             id="wind"
-            className="flex aspect-square relative w-full max-w-[120px] mx-auto items-center justify-center"
+            className={`flex aspect-square relative w-full max-w-[120px] mx-auto items-center justify-center transition-colors duration-300 ${windIntensityClass}`}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
