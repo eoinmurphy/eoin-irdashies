@@ -4,6 +4,7 @@ import {
   useRef,
   useState,
   useEffect,
+  useMemo,
   CSSProperties,
 } from 'react';
 import type { DashboardWidget, WidgetLayout } from '@irdashies/types';
@@ -51,6 +52,22 @@ export const WidgetContainer = memo(
     const pendingLayoutRef = useRef<WidgetLayout | null>(null);
     const containerOffset = useContainerOffset();
     const { containerBoundsInfo, currentDashboard } = useDashboard();
+    const showEditModePixelDistances =
+      currentDashboard?.generalSettings?.showEditModePixelDistances ?? true;
+    const snapEditModeWidgetsToGrid =
+      currentDashboard?.generalSettings?.snapEditModeWidgetsToGrid ?? true;
+    const snapBounds =
+      containerBoundsInfo?.displayBounds ?? containerBoundsInfo?.expected;
+    const gridSnapOptions = useMemo(
+      () =>
+        snapEditModeWidgetsToGrid
+          ? {
+              bounds: snapBounds,
+              siblingLayouts,
+            }
+          : undefined,
+      [snapEditModeWidgetsToGrid, siblingLayouts, snapBounds]
+    );
 
     const handleLayoutChange = useCallback(
       (newLayout: WidgetLayout) => {
@@ -85,22 +102,14 @@ export const WidgetContainer = memo(
       layout: localLayout,
       onLayoutChange: handleLayoutChange,
       enabled: editMode,
-      snapOptions: {
-        bounds:
-          containerBoundsInfo?.displayBounds ?? containerBoundsInfo?.expected,
-        siblingLayouts,
-      },
+      snapOptions: gridSnapOptions,
     });
 
     const { isResizing, getResizeHandleProps } = useResizeWidget({
       layout: localLayout,
       onLayoutChange: handleLayoutChange,
       enabled: editMode,
-      snapOptions: {
-        bounds:
-          containerBoundsInfo?.displayBounds ?? containerBoundsInfo?.expected,
-        siblingLayouts,
-      },
+      snapOptions: gridSnapOptions,
     });
 
     // Use local state during interaction, otherwise use prop
@@ -227,7 +236,9 @@ export const WidgetContainer = memo(
             <ResizeHandles getResizeHandleProps={getResizeHandleProps} />
 
             {/* Edge distance indicators */}
-            {edgeDistances && <EdgeDistanceLabels distances={edgeDistances} />}
+            {showEditModePixelDistances && edgeDistances && (
+              <EdgeDistanceLabels distances={edgeDistances} />
+            )}
           </>
         )}
       </div>

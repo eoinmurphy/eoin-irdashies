@@ -149,6 +149,8 @@ export interface GeneralSettingsType {
   borderRadius?: number;
   overlayAlwaysOnTop?: boolean;
   enableNetworkAccess?: boolean;
+  showEditModePixelDistances?: boolean;
+  snapEditModeWidgetsToGrid?: boolean;
   /** Driver tag groups and mappings for overlays */
   driverTagSettings?: DriverTagSettings;
 }

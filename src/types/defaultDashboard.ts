@@ -1262,6 +1262,8 @@ export const defaultDashboard: {
     borderRadius: 2,
     overlayAlwaysOnTop: true,
     enableNetworkAccess: false,
+    showEditModePixelDistances: true,
+    snapEditModeWidgetsToGrid: true,
   },
 };
 
