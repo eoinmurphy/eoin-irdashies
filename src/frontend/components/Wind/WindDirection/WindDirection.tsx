@@ -1,20 +1,11 @@
 import { memo, useRef, useEffect, useLayoutEffect, useState } from 'react';
+import { getWindIntensityClass } from '../../../domain/weather/wind';
 
 export interface WindDirectionProps {
   speedMs?: number;
   direction?: number;
   metric?: boolean;
 }
-
-const getWindIntensityClass = (speed?: number) => {
-  if (speed === undefined) return 'text-white';
-  if (speed < 5) return 'text-white';
-  if (speed < 15) return 'text-sky-300';
-  if (speed < 30) return 'text-emerald-300';
-  if (speed < 40) return 'text-orange-300';
-
-  return 'text-red-400';
-};
 
 export const WindDirection = memo(
   ({ speedMs, direction, metric = true }: WindDirectionProps) => {
