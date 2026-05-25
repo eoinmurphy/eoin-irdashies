@@ -16,7 +16,7 @@ export const InputTrace = () => {
 
   return (
     <div
-      className="w-full h-full p-2 rounded-md bg-slate-800/(--bg-opacity) [&_svg]:h-full [&_svg]:w-full"
+      className="widget-radius-surface w-full h-full p-2 rounded-md bg-slate-800/(--bg-opacity) [&_svg]:h-full [&_svg]:w-full"
       style={{
         ['--bg-opacity' as string]: `${settings.background?.opacity ?? 80}%`,
       }}

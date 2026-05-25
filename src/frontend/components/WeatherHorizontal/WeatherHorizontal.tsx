@@ -38,7 +38,7 @@ export const WeatherHorizontal = () => {
 
   return (
     <div
-      className="w-fit rounded-sm p-2 bg-slate-800/(--bg-opacity)"
+      className="widget-radius-surface w-fit rounded-sm p-2 bg-slate-800/(--bg-opacity)"
       style={{
         ['--bg-opacity' as string]: `${settings?.background?.opacity ?? 80}%`,
       }}

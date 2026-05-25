@@ -139,7 +139,7 @@ export const LapTimeLogDisplay = ({
   return (
     <div className={`h-full flex ${alignment}`}>
       <div
-        className={`w-full text-sm bg-slate-800/[var(--bg-opacity)] rounded-md text-white ${!isCompact ? 'p-2' : 'p-0.5'}`}
+        className={`widget-radius-surface w-full text-sm bg-slate-800/[var(--bg-opacity)] rounded-md text-white ${!isCompact ? 'p-2' : 'p-0.5'}`}
         style={
           {
             '--bg-opacity': `${settings.background.opacity}%`,

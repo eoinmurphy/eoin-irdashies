@@ -286,7 +286,7 @@ export const Tachometer = ({
         {/* LED lights */}
         <div
           id="ledcontainer"
-          className={`bg-slate-800/(--bg-opacity) flex ${rpmOrientation === 'horizontal' ? 'relative' : ''} items-center justify-center rounded-full`}
+          className={`widget-radius-surface bg-slate-800/(--bg-opacity) flex ${rpmOrientation === 'horizontal' ? 'relative' : ''} items-center justify-center rounded-full`}
           style={{
             ['--bg-opacity' as string]: `${opacity ?? 80}%`,
             padding: `4px min(40cqh, ${(42.5 / effectiveNumLights).toFixed(2)}cqw)`,
@@ -317,7 +317,7 @@ export const Tachometer = ({
           {shouldShowRpmBox && rpmOrientation === 'horizontal' && (
             <div
               id="rpm-text"
-              className={`bg-slate-800/(--bg-opacity) text-base absolute right-[-8em] flex min-w-[6em] font-mono font-bold text-white px-4 mx-2 rounded-lg transition-colors duration-200 whitespace-nowrap justify-center items-center`}
+              className={`widget-radius-surface bg-slate-800/(--bg-opacity) text-base absolute right-[-8em] flex min-w-[6em] font-mono font-bold text-white px-4 mx-2 rounded-lg transition-colors duration-200 whitespace-nowrap justify-center items-center`}
               style={{
                 ...getRpmBoxStyle(),
                 height: '2em',
@@ -347,7 +347,7 @@ export const Tachometer = ({
         {shouldShowRpmBox && rpmOrientation !== 'horizontal' && (
           <div
             id="rpm-text"
-            className={`bg-slate-800/(--bg-opacity) text-base flex min-w-[6em] font-mono font-bold text-white px-4 mx-2 rounded-lg transition-colors duration-200 whitespace-nowrap justify-center items-center`}
+            className={`widget-radius-surface bg-slate-800/(--bg-opacity) text-base flex min-w-[6em] font-mono font-bold text-white px-4 mx-2 rounded-lg transition-colors duration-200 whitespace-nowrap justify-center items-center`}
             style={{
               ...getRpmBoxStyle(),
               height: '1.5em',
