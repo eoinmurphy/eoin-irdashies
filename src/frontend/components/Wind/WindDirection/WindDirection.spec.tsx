@@ -53,4 +53,22 @@ describe('WindDirection', () => {
     expect(wind).toHaveStyle({ width: '200px', height: '200px' });
     expect(speed).toHaveStyle({ fontSize: '54px' });
   });
+
+  it('colors the wind display by intensity', () => {
+    const { container, rerender } = render(<WindDirection />);
+
+    expect(container.querySelector('#wind')).toHaveClass('text-white');
+
+    const cases = [
+      { speedMs: 3, expectedClass: 'text-sky-300' },
+      { speedMs: 6, expectedClass: 'text-emerald-300' },
+      { speedMs: 10, expectedClass: 'text-orange-300' },
+      { speedMs: 12, expectedClass: 'text-red-400' },
+    ];
+
+    cases.forEach(({ speedMs, expectedClass }) => {
+      rerender(<WindDirection speedMs={speedMs} />);
+      expect(container.querySelector('#wind')).toHaveClass(expectedClass);
+    });
+  });
 });

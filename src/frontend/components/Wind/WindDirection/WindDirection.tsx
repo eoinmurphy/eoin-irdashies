@@ -6,6 +6,16 @@ export interface WindDirectionProps {
   metric?: boolean;
 }
 
+const getWindIntensityClass = (speed?: number) => {
+  if (speed === undefined) return 'text-white';
+  if (speed < 5) return 'text-white';
+  if (speed < 15) return 'text-sky-300';
+  if (speed < 30) return 'text-emerald-300';
+  if (speed < 40) return 'text-orange-300';
+
+  return 'text-red-400';
+};
+
 export const WindDirection = memo(
   ({ speedMs, direction, metric = true }: WindDirectionProps) => {
     const speed =
@@ -53,6 +63,7 @@ export const WindDirection = memo(
 
     const visualSize = size ? `${size}px` : '100%';
     const fontSize = size ? Math.max(10, Math.round(size * 0.27)) : 32;
+    const windIntensityClass = getWindIntensityClass(speed);
 
     return (
       <div
@@ -61,7 +72,7 @@ export const WindDirection = memo(
       >
         <div
           id="wind"
-          className="relative flex aspect-square items-center justify-center"
+          className={`relative flex aspect-square items-center justify-center transition-colors duration-300 ${windIntensityClass}`}
           style={{ width: visualSize, height: visualSize }}
         >
           <svg
