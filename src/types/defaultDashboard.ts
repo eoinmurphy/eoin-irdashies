@@ -1259,6 +1259,7 @@ export const defaultDashboard: {
     startMinimized: false,
     closeToTray: true,
     compactMode: 'off' as const,
+    borderRadius: 2,
     overlayAlwaysOnTop: true,
     enableNetworkAccess: false,
   },

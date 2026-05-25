@@ -1,4 +1,7 @@
-import type { DashboardWidget } from './dashboardLayout';
+import type {
+  DashboardWidget,
+  WidgetBorderRadiusSettings,
+} from './dashboardLayout';
 
 // ===========================
 // Shared primitive types
@@ -646,6 +649,10 @@ export interface BaseWidgetSettings<T = Record<string, unknown>> {
   type?: string;
   enabled: boolean;
   config: T;
+}
+
+export interface SharedWidgetConfig {
+  borderRadius?: WidgetBorderRadiusSettings;
 }
 
 /** Available settings tabs */

@@ -118,6 +118,21 @@ html {
   color-scheme: dark;
 }
 
+.widget-radius-clip {
+  overflow: hidden;
+}
+
+.widget-radius-clip > *,
+.widget-radius-clip .widget-radius-surface {
+  border-top-left-radius: var(--widget-border-radius-top-left) !important;
+  border-top-right-radius: var(--widget-border-radius-top-right) !important;
+  border-bottom-right-radius: var(
+    --widget-border-radius-bottom-right
+  ) !important;
+  border-bottom-left-radius: var(--widget-border-radius-bottom-left) !important;
+  overflow: hidden;
+}
+
 .overlay-window.overlay-theme-font-face-lato {
   font-family: 'Lato', sans-serif;
 }

@@ -1,7 +1,19 @@
 import { ReactNode, useState } from 'react';
 import { ToggleSwitch } from './ToggleSwitch';
-import { BaseWidgetSettings } from '@irdashies/types';
+import type {
+  BaseWidgetSettings,
+  SharedWidgetConfig,
+  WidgetBorderRadiusSettings,
+} from '@irdashies/types';
 import { useDashboard } from '@irdashies/context';
+import { SettingButtonGroupRow } from './SettingButtonGroupRow';
+import { SettingSliderRow } from './SettingSliderRow';
+import {
+  DEFAULT_BORDER_RADIUS_CORNERS,
+  DEFAULT_WIDGET_BORDER_RADIUS,
+  MAX_BORDER_RADIUS,
+  clampBorderRadius,
+} from '@irdashies/utils/borderRadius';
 
 interface BaseSettingsSectionProps<T> {
   title: string;
@@ -14,7 +26,18 @@ interface BaseSettingsSectionProps<T> {
     | ReactNode;
   onConfigChange?: (config: Partial<T>) => void;
   disableInternalScroll?: boolean;
+  showBorderRadiusControls?: boolean;
 }
+
+const CORNER_LABELS: {
+  key: keyof NonNullable<WidgetBorderRadiusSettings['corners']>;
+  title: string;
+}[] = [
+  { key: 'topLeft', title: 'Top Left' },
+  { key: 'topRight', title: 'Top Right' },
+  { key: 'bottomRight', title: 'Bottom Right' },
+  { key: 'bottomLeft', title: 'Bottom Left' },
+];
 
 export const BaseSettingsSection = <T,>({
   title,
@@ -25,6 +48,7 @@ export const BaseSettingsSection = <T,>({
   children,
   onConfigChange,
   disableInternalScroll = false,
+  showBorderRadiusControls = true,
 }: BaseSettingsSectionProps<T>) => {
   const { currentDashboard, onDashboardUpdated } = useDashboard();
   const [localSettings, setLocalSettings] =
@@ -67,6 +91,64 @@ export const BaseSettingsSection = <T,>({
     onSettingsChange(updatedSettings);
     updateDashboard(updatedSettings);
     onConfigChange?.(newConfig);
+  };
+
+  const widgetConfig = localSettings.config as T & SharedWidgetConfig;
+  const borderRadius =
+    widgetConfig.borderRadius ?? DEFAULT_WIDGET_BORDER_RADIUS;
+
+  const handleBorderRadiusChange = (
+    newBorderRadius: WidgetBorderRadiusSettings
+  ) => {
+    handleConfigChange({
+      borderRadius: newBorderRadius,
+    } as unknown as Partial<T>);
+  };
+
+  const handleBorderRadiusModeChange = (
+    mode: WidgetBorderRadiusSettings['mode']
+  ) => {
+    if (mode === 'inherit') {
+      handleBorderRadiusChange({ mode });
+      return;
+    }
+
+    if (mode === 'uniform') {
+      handleBorderRadiusChange({
+        mode,
+        radius: clampBorderRadius(borderRadius.radius),
+      });
+      return;
+    }
+
+    handleBorderRadiusChange({
+      mode,
+      corners: {
+        ...DEFAULT_BORDER_RADIUS_CORNERS,
+        ...borderRadius.corners,
+      },
+    });
+  };
+
+  const handleUniformBorderRadiusChange = (radius: number) => {
+    handleBorderRadiusChange({
+      mode: 'uniform',
+      radius: clampBorderRadius(radius),
+    });
+  };
+
+  const handleCornerBorderRadiusChange = (
+    corner: keyof NonNullable<WidgetBorderRadiusSettings['corners']>,
+    value: number
+  ) => {
+    handleBorderRadiusChange({
+      mode: 'corners',
+      corners: {
+        ...DEFAULT_BORDER_RADIUS_CORNERS,
+        ...borderRadius.corners,
+        [corner]: clampBorderRadius(value),
+      },
+    });
   };
 
   const [showResetConfirm, setShowResetConfirm] = useState(false);
@@ -175,6 +257,55 @@ export const BaseSettingsSection = <T,>({
             Reset Position
           </button>
         </div>
+
+        {showBorderRadiusControls && (
+          <div className="space-y-4 p-4 pt-2 mt-2 border-t border-slate-700">
+            <SettingButtonGroupRow
+              title="Border Radius"
+              value={borderRadius.mode}
+              options={[
+                { label: 'Global', value: 'inherit' },
+                { label: 'Uniform', value: 'uniform' },
+                { label: 'Corners', value: 'corners' },
+              ]}
+              onChange={handleBorderRadiusModeChange}
+            />
+
+            {borderRadius.mode === 'uniform' && (
+              <SettingSliderRow
+                title="Radius"
+                units="px"
+                value={clampBorderRadius(borderRadius.radius)}
+                min={0}
+                max={MAX_BORDER_RADIUS}
+                step={1}
+                onChange={handleUniformBorderRadiusChange}
+              />
+            )}
+
+            {borderRadius.mode === 'corners' && (
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                {CORNER_LABELS.map(({ key, title }) => (
+                  <SettingSliderRow
+                    key={key}
+                    title={title}
+                    units="px"
+                    value={clampBorderRadius(
+                      borderRadius.corners?.[key] ??
+                        DEFAULT_BORDER_RADIUS_CORNERS[key]
+                    )}
+                    min={0}
+                    max={MAX_BORDER_RADIUS}
+                    step={1}
+                    onChange={(value) =>
+                      handleCornerBorderRadiusChange(key, value)
+                    }
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+        )}
 
         {showResetConfirm && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">

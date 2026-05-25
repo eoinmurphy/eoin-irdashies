@@ -74,6 +74,19 @@ export interface DriverTagSettings {
   presetOverrides?: Record<string, Partial<TagGroup>>;
 }
 
+export interface BorderRadiusCorners {
+  topLeft: number;
+  topRight: number;
+  bottomRight: number;
+  bottomLeft: number;
+}
+
+export interface WidgetBorderRadiusSettings {
+  mode: 'inherit' | 'uniform' | 'corners';
+  radius?: number;
+  corners?: BorderRadiusCorners;
+}
+
 export type FontType = 'lato' | 'notosans' | 'figtree' | 'inter' | 'roboto';
 export type FontSize =
   | '4xs'
@@ -133,6 +146,7 @@ export interface GeneralSettingsType {
   startMinimized?: boolean;
   closeToTray?: boolean;
   compactMode?: 'off' | 'compact' | 'ultra';
+  borderRadius?: number;
   overlayAlwaysOnTop?: boolean;
   enableNetworkAccess?: boolean;
   /** Driver tag groups and mappings for overlays */

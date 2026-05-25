@@ -15,6 +15,11 @@ import { useEdgeDistances } from './useEdgeDistances';
 import { getWidgetName } from '../../constants/widgetNames';
 import { ResizeIcon, GearIcon, XIcon } from '@phosphor-icons/react';
 import { useContainerOffset, useDashboard } from '@irdashies/context';
+import {
+  WIDGET_BORDER_RADIUS_CLASS,
+  getWidgetBorderRadiusStyle,
+} from '@irdashies/utils/borderRadius';
+import type { SharedWidgetConfig } from '@irdashies/types';
 
 export interface WidgetContainerProps {
   widget: DashboardWidget;
@@ -45,7 +50,7 @@ export const WidgetContainer = memo(
     );
     const pendingLayoutRef = useRef<WidgetLayout | null>(null);
     const containerOffset = useContainerOffset();
-    const { containerBoundsInfo } = useDashboard();
+    const { containerBoundsInfo, currentDashboard } = useDashboard();
 
     const handleLayoutChange = useCallback(
       (newLayout: WidgetLayout) => {
@@ -163,11 +168,20 @@ export const WidgetContainer = memo(
     };
 
     const widgetName = getWidgetName(id);
+    const borderRadiusStyle = getWidgetBorderRadiusStyle(
+      (widget.config as SharedWidgetConfig | undefined)?.borderRadius,
+      currentDashboard?.generalSettings
+    );
 
     return (
       <div style={containerStyle} data-widget-id={id}>
         {/* Widget content */}
-        <div className={`w-full h-full pointer-events-none`}>{children}</div>
+        <div
+          className={`w-full h-full pointer-events-none ${WIDGET_BORDER_RADIUS_CLASS}`}
+          style={borderRadiusStyle}
+        >
+          {children}
+        </div>
 
         {/* Edit mode overlay */}
         {editMode && (
