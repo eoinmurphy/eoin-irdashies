@@ -122,6 +122,9 @@ export const OverlayContainer = memo(() => {
           <WidgetContainer
             key={widget.id}
             widget={widget}
+            siblingLayouts={widgetsForThisDisplay
+              .filter((otherWidget) => otherWidget.id !== widget.id)
+              .map((otherWidget) => otherWidget.layout)}
             editMode={editMode}
             zIndex={index + 1}
             onLayoutChange={handleLayoutChange}
