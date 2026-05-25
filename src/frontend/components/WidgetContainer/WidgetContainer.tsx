@@ -14,10 +14,11 @@ import { EdgeDistanceLabels } from './EdgeDistanceLabels';
 import { useEdgeDistances } from './useEdgeDistances';
 import { getWidgetName } from '../../constants/widgetNames';
 import { ResizeIcon, GearIcon, XIcon } from '@phosphor-icons/react';
-import { useContainerOffset } from '@irdashies/context';
+import { useContainerOffset, useDashboard } from '@irdashies/context';
 
 export interface WidgetContainerProps {
   widget: DashboardWidget;
+  siblingLayouts?: WidgetLayout[];
   editMode: boolean;
   zIndex: number;
   onLayoutChange: (widgetId: string, layout: WidgetLayout) => void;
@@ -29,6 +30,7 @@ export interface WidgetContainerProps {
 export const WidgetContainer = memo(
   ({
     widget,
+    siblingLayouts = [],
     editMode,
     zIndex,
     onLayoutChange,
@@ -43,6 +45,7 @@ export const WidgetContainer = memo(
     );
     const pendingLayoutRef = useRef<WidgetLayout | null>(null);
     const containerOffset = useContainerOffset();
+    const { containerBoundsInfo } = useDashboard();
 
     const handleLayoutChange = useCallback(
       (newLayout: WidgetLayout) => {
@@ -77,12 +80,22 @@ export const WidgetContainer = memo(
       layout: localLayout,
       onLayoutChange: handleLayoutChange,
       enabled: editMode,
+      snapOptions: {
+        bounds:
+          containerBoundsInfo?.displayBounds ?? containerBoundsInfo?.expected,
+        siblingLayouts,
+      },
     });
 
     const { isResizing, getResizeHandleProps } = useResizeWidget({
       layout: localLayout,
       onLayoutChange: handleLayoutChange,
       enabled: editMode,
+      snapOptions: {
+        bounds:
+          containerBoundsInfo?.displayBounds ?? containerBoundsInfo?.expected,
+        siblingLayouts,
+      },
     });
 
     // Use local state during interaction, otherwise use prop
