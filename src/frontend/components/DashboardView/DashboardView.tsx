@@ -11,10 +11,14 @@ import { useDashboard } from '@irdashies/context';
 import { getWidget } from '../../WidgetIndex';
 import { getWidgetName } from '../../constants/widgetNames';
 import { ResizeIcon, XIcon } from '@phosphor-icons/react';
-import type { DashboardWidget } from '@irdashies/types';
+import type { DashboardWidget, GeneralSettingsType } from '@irdashies/types';
 import { useDragWidget, useResizeWidget } from '../WidgetContainer';
 import { ResizeHandles } from '../WidgetContainer/ResizeHandle';
 import logger from '@irdashies/utils/logger';
+import {
+  WIDGET_BORDER_RADIUS_CLASS,
+  getWidgetBorderRadiusStyle,
+} from '@irdashies/utils/borderRadius';
 
 interface WidgetPosition {
   x: number;
@@ -30,6 +34,7 @@ interface DashboardWidgetItemProps {
   onPositionChange: (widgetId: string, position: WidgetPosition) => void;
   onClick: (widgetId: string) => void;
   onCloseBorder: () => void;
+  generalSettings?: GeneralSettingsType;
 }
 
 const DashboardWidgetItem = memo(
@@ -40,6 +45,7 @@ const DashboardWidgetItem = memo(
     onPositionChange,
     onClick,
     onCloseBorder,
+    generalSettings,
   }: DashboardWidgetItemProps) => {
     const [localLayout, setLocalLayout] = useState(position);
     const debounceRef = useRef<ReturnType<typeof setTimeout> | undefined>(
@@ -120,6 +126,10 @@ const DashboardWidgetItem = memo(
       width: localLayout.width,
       height: localLayout.height,
     };
+    const borderRadiusStyle = getWidgetBorderRadiusStyle(
+      widget.borderRadius,
+      generalSettings
+    );
 
     return (
       <div style={containerStyle} data-widget-id={widget.id}>
@@ -164,7 +174,12 @@ const DashboardWidgetItem = memo(
               }
             `}</style>
             <div className="widget-content w-full h-full">
-              <WidgetComponent {...widget.config} />
+              <div
+                className={`w-full h-full ${WIDGET_BORDER_RADIUS_CLASS}`}
+                style={borderRadiusStyle}
+              >
+                <WidgetComponent {...widget.config} />
+              </div>
             </div>
           </div>
         </div>
@@ -369,6 +384,7 @@ export const DashboardView = () => {
             onPositionChange={handlePositionChange}
             onClick={handleWidgetClick}
             onCloseBorder={handleCloseBorder}
+            generalSettings={currentDashboard.generalSettings}
           />
         );
       })}

@@ -1,6 +1,12 @@
 import { useState } from 'react';
 import { useDashboard } from '@irdashies/context';
-import { GeneralSettingsType } from '@irdashies/types';
+import type { GeneralSettingsType } from '@irdashies/types';
+import { SettingSliderRow } from '../components/SettingSliderRow';
+import {
+  DEFAULT_BORDER_RADIUS,
+  MAX_BORDER_RADIUS,
+  clampBorderRadius,
+} from '@irdashies/utils/borderRadius';
 
 const FONT_PRESETS = {
   lato: 'Lato',
@@ -95,6 +101,9 @@ export const GeneralSettings = ({ previewMode }: GeneralSettingsProps = {}) => {
     startMinimized: currentDashboard?.generalSettings?.startMinimized ?? false,
     closeToTray: currentDashboard?.generalSettings?.closeToTray ?? true,
     compactMode: currentDashboard?.generalSettings?.compactMode ?? 'off',
+    borderRadius: clampBorderRadius(
+      currentDashboard?.generalSettings?.borderRadius ?? DEFAULT_BORDER_RADIUS
+    ),
     overlayAlwaysOnTop:
       currentDashboard?.generalSettings?.overlayAlwaysOnTop ?? true,
     enableNetworkAccess:
@@ -106,9 +115,13 @@ export const GeneralSettings = ({ previewMode }: GeneralSettingsProps = {}) => {
   }
 
   const updateDashboard = (newSettings: GeneralSettingsType) => {
+    const mergedSettings = {
+      ...currentDashboard.generalSettings,
+      ...newSettings,
+    };
     const updatedDashboard = {
       ...currentDashboard,
-      generalSettings: newSettings,
+      generalSettings: mergedSettings,
     };
     onDashboardUpdated(updatedDashboard);
   };
@@ -262,6 +275,15 @@ export const GeneralSettings = ({ previewMode }: GeneralSettingsProps = {}) => {
     updateDashboard(newSettings);
   };
 
+  const handleBorderRadiusChange = (borderRadius: number) => {
+    const newSettings = {
+      ...settings,
+      borderRadius: clampBorderRadius(borderRadius),
+    };
+    setSettings(newSettings);
+    updateDashboard(newSettings);
+  };
+
   const handleOverlayAlwaysOnTopChange = (enabled: boolean) => {
     const newSettings = { ...settings, overlayAlwaysOnTop: enabled };
     setSettings(newSettings);
@@ -383,6 +405,20 @@ export const GeneralSettings = ({ previewMode }: GeneralSettingsProps = {}) => {
               <option value="ultra">Ultra</option>
             </select>
           </div>
+        </div>
+
+        {/* Border Radius Setting */}
+        <div className="space-y-4">
+          <SettingSliderRow
+            title="Border Radius"
+            description="Default corner radius for widgets that inherit the global setting."
+            units="px"
+            value={settings.borderRadius ?? DEFAULT_BORDER_RADIUS}
+            min={0}
+            max={MAX_BORDER_RADIUS}
+            step={1}
+            onChange={handleBorderRadiusChange}
+          />
         </div>
 
         {/* Color Theme Settings */}

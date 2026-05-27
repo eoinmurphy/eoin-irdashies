@@ -1,11 +1,18 @@
 import { Meta, StoryObj } from '@storybook/react-vite';
 import { Tachometer } from './Tachometer';
-import { TelemetryDecorator } from '@irdashies/storybook';
+import {
+  BorderRadiusDecorator,
+  TelemetryDecorator,
+  borderRadiusStoryArgTypes,
+  borderRadiusStoryArgs,
+} from '@irdashies/storybook';
 
 const meta: Meta<typeof Tachometer> = {
   component: Tachometer,
   title: 'widgets/Tachometer/components/Widget',
-  decorators: [TelemetryDecorator()],
+  decorators: [BorderRadiusDecorator, TelemetryDecorator()],
+  args: borderRadiusStoryArgs,
+  argTypes: borderRadiusStoryArgTypes,
 };
 export default meta;
 

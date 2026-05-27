@@ -50,6 +50,7 @@ export const BlindSpotMonitorSettings = () => {
       settings={settings}
       onSettingsChange={setSettings}
       widgetId={SETTING_ID}
+      showBorderRadiusControls={false}
     >
       {(handleConfigChange) => (
         <div className="space-y-4">

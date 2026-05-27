@@ -1,6 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { LapTimeLogDisplay } from './LapTimeLog';
 import type { LapTimeLogConfig } from '@irdashies/types';
+import {
+  BorderRadiusDecorator,
+  borderRadiusStoryArgTypes,
+  borderRadiusStoryArgs,
+} from '@irdashies/storybook';
 
 interface LapEntry {
   lap: number;
@@ -15,12 +20,15 @@ const meta: Meta<typeof LapTimeLogDisplay> = {
     layout: 'centered',
   },
   decorators: [
+    BorderRadiusDecorator,
     (Story) => (
       <div style={{ width: '250px' }}>
         <Story />
       </div>
     ),
   ],
+  args: borderRadiusStoryArgs,
+  argTypes: borderRadiusStoryArgTypes,
 };
 
 export default meta;

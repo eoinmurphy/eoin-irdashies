@@ -123,6 +123,7 @@ export const OverlayContainer = memo(() => {
             key={widget.id}
             widget={widget}
             editMode={editMode}
+            generalSettings={currentDashboard.generalSettings}
             zIndex={index + 1}
             onLayoutChange={handleLayoutChange}
             onDisable={handleDisableWidget}
